@@ -2,10 +2,17 @@
 
 #set -xeuo pipefail
 
-mkdir ${HOST}
-openssl genrsa -aes256 -out ${HOST}/${HOST}-ca-key.pem 4096
-openssl req -new -x509 -days 365 -key ${HOST}/${HOST}-ca-key.pem -sha256 -out ${HOST}/${HOST}-ca.pem
+HOST=g2
 
-openssl genrsa -out ${HOST}/${HOST}-server-key.pem 4096
+CURDIR=$(pwd)
 
-openssl req -subj "/CN=$HOST" -sha256 -new -key ${HOST}/server-key.pem -out ${HOST}/server.csr
+HOSTDIR=${CURDIR}/${HOST}
+
+mkdir ${HOSTDIR}
+
+openssl genrsa -aes256 -out ${HOSTDIR}/${HOST}-ca-key.pem 4096
+openssl req -new -x509 -days 365 -key ${HOSTDIR}/${HOST}-ca-key.pem -sha256 -out ${HOSTDIR}/${HOST}-ca.pem
+
+openssl genrsa -out ${HOSTDIR}/${HOST}-server-key.pem 4096
+
+openssl req -subj "/CN=$HOST" -sha256 -new -key ${HOSTDIR}/${HOST}-server-key.pem -out ${HOSTDIR}/${HOST}-server.csr
