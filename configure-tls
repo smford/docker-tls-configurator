@@ -10,9 +10,14 @@ HOSTDIR=${CURDIR}/${HOST}
 
 mkdir ${HOSTDIR}
 
+echo "1: Generating CA Key"
 openssl genrsa -aes256 -out ${HOSTDIR}/${HOST}-ca-key.pem 4096
+
+echo "2: Generating CA Certificate"
 openssl req -new -x509 -days 365 -key ${HOSTDIR}/${HOST}-ca-key.pem -sha256 -out ${HOSTDIR}/${HOST}-ca.pem
 
+echo "3: Generating Server Key"
 openssl genrsa -out ${HOSTDIR}/${HOST}-server-key.pem 4096
 
+echo "4: Generating Server CSR"
 openssl req -subj "/CN=$HOST" -sha256 -new -key ${HOSTDIR}/${HOST}-server-key.pem -out ${HOSTDIR}/${HOST}-server.csr
