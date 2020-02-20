@@ -21,3 +21,7 @@ openssl genrsa -out ${HOSTDIR}/${HOST}-server-key.pem 4096
 
 echo "4: Generating Server CSR"
 openssl req -subj "/CN=$HOST" -sha256 -new -key ${HOSTDIR}/${HOST}-server-key.pem -out ${HOSTDIR}/${HOST}-server.csr
+
+echo "5: Configuring Server CSR"
+echo subjectAltName = DNS:$HOST,IP:192.168.10.21,IP:127.0.0.1 >> ${HOSTDIR}/${HOST}-extfile.cnf
+echo extendedKeyUsage = serverAuth >> ${HOSTDIR}/${HOST}-extfile.cnf
