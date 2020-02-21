@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-#set -xeuo pipefail
+set -euo pipefail
+
+# Tested on:
+# - Ubuntu 18.04.3 LTS bionic
 
 if [[ $# < 2 ]]; then
   echo ""
