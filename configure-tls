@@ -33,9 +33,6 @@ read -s -p "Certificate Authority Password: " CAPASSWORD1
 echo ""
 read -s -p "               Verify Password: " CAPASSWORD2
 
-echo -e "\ncap1=${CAPASSWORD1}"
-echo -e "cap2=${CAPASSWORD2}"
-
 if [ "${CAPASSWORD1}" != "${CAPASSWORD2}" ]; then
   echo "Passwords do not match, exiting"
   exit 1
@@ -135,7 +132,7 @@ chmod -v 0644 /etc/systemd/system/docker.service.d/override.conf
 systemctl daemon-reload
 echo "===================================================="
 
-echo "Completed Installation."
+eeho "Completed Installation."
 echo -e "- created certificate authority key and certificate, ${HOST}-ca-key.pem, ${HOST}-ca.pem"
 echo -e "- created docker server key and certificate, ${HOST}-server-key.pem, ${HOST}-server-cert.pem"
 echo -e "- created client key and certificate, and signed with server certificate, ${HOST}-client-key.pem, ${HOST}-client-key.pem"
