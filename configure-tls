@@ -5,12 +5,27 @@
 HOST=g2
 IP=192.168.10.21
 
-CURDIR=$(pwd)
+if [[ $# < 2 ]]; then
+  echo "A simple tool to configure TLS certificates for docker"
+	echo ""
+  echo -e "Usage:\n  configure-docker-tls <hostname> <ip>"
+	echo ""
+	echo " hostname = DNS hostname of server running the docker daemon"
+	echo " ip       = IP address of server running the docker daemon"
+	echo ""
+  exit 1
+fi
 
-HOSTDIR=${CURDIR}/${HOST}
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
+HOSTDIR=${SCRIPTDIR}/${HOST}
+
+# temporarily used to bypass generation of certs
 if false; then
-mkdir ${HOSTDIR}
+
+if [[ -d ${HOSTDIR} ]]; then
+  mkdir ${HOSTDIR}
+fi
 
 echo "1: Generating CA Key"
 openssl genrsa -aes256 -out ${HOSTDIR}/${HOST}-ca-key.pem 4096
@@ -67,7 +82,32 @@ cp ${HOSTDIR}/${HOST}-server-key.pem /etc/docker
 chmod -v 0400 /etc/docker/${HOST}-server-key.pem
 echo "===================================================="
 
-echo "13: Configure service options"
-echo "DOCKER_OPTS=\"--tlsverify --tlscacert=/etc/docker/${HOST}-ca.pem --tlscert=/etc/docker/${HOST}-server-cert.pem --tlskey=/etc/docker/${HOST}-server-key.pem -H=0.0.0.0:2376\"" >> /etc/default/docker
-chmod -v 0400 /etc/default/docker
+echo "13: Configure service: /etc/docker/daemon.json"
+cat >/etc/docker/daemon.json <<EOL
+{
+	"tls": true,
+	"tlsverify": true,
+	"tlscacert": "/etc/docker/${HOST}-ca.pem",
+	"tlscert": "/etc/docker/${HOST}-server-cert.pem",
+	"tlskey": "/etc/docker/${HOST}-server-key.pem"
+}
+EOL
+chmod -v 0644 /etc/docker/daemon.json
 echo "===================================================="
+
+echo "14: Configure service: /etc/systemd/system/docker.service.d/override.conf"
+cat >/etc/systemd/system/docker.service.d/override.conf <<EOL
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H fd:// -H tcp://127.0.0.1:2376 -H tcp://${IP}:2376
+EOL
+chmod -v 0644 /etc/systemd/system/docker.service.d/override.conf
+echo "===================================================="
+
+echo "Completed Installation."
+echo "- created certificate authority key and certificate"
+echo "- created docker server key and certificate"
+echo "- created client key and certificate, and signed with server certificate"
+echo "- installed certificate authority certificate, server key and key in to /etc/docker"
+echo "- configured docker server TLS, using the server certificate and key"
+echo "- configured docker server to expose 2736 for TLS connections"
