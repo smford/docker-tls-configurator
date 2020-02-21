@@ -26,12 +26,10 @@ echo -e "IP=${IP}"
 echo -e "SCRIPTDIR=${SCRIPTDIR}"
 echo -e "HOSTDIR=${HOSTDIR}"
 
-exit
-
 # temporarily used to bypass generation of certs
 #if false; then
 
-if [[ -d ${HOSTDIR} ]]; then
+if [[ ! -d ${HOSTDIR} ]]; then
   mkdir ${HOSTDIR}
 fi
 
