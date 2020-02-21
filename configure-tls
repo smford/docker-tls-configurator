@@ -105,12 +105,18 @@ chmod -v 0644 /etc/docker/daemon.json
 echo "===================================================="
 
 echo "14: Configure service: /etc/systemd/system/docker.service.d/override.conf"
+if [[ ! -d /etc/systemd/system/docker.service.d ]]; then
+  mkdir /etc/systemd/system/docker.service.d
+  chown root:root /etc/systemd/system/docker.service.d
+  chmod 0755 /etc/systemd/system/docker.service.d
+fi
 cat >/etc/systemd/system/docker.service.d/override.conf <<EOL
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd -H fd:// -H tcp://127.0.0.1:2376 -H tcp://${IP}:2376
 EOL
 chmod -v 0644 /etc/systemd/system/docker.service.d/override.conf
+systemctl daemon-reload
 echo "===================================================="
 
 echo "Completed Installation."
