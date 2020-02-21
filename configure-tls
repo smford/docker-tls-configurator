@@ -9,6 +9,7 @@ CURDIR=$(pwd)
 
 HOSTDIR=${CURDIR}/${HOST}
 
+if false; then
 mkdir ${HOSTDIR}
 
 echo "1: Generating CA Key"
@@ -50,4 +51,23 @@ echo "===================================================="
 
 echo "10: Generate Client Signed Certificate"
 openssl x509 -req -days 365 -sha256 -in ${HOSTDIR}/${HOST}-client.csr -CA ${HOSTDIR}/${HOST}-ca.pem -CAkey ${HOSTDIR}/${HOST}-ca-key.pem -CAcreateserial -out ${HOSTDIR}/${HOST}-client-cert.pem -extfile ${HOSTDIR}/${HOST}-client-extfile.cnf
+echo "===================================================="
+
+fi
+
+echo "11: Configure Docker: Certificates"
+cp ${HOSTDIR}/${HOST}-ca.pem /etc/docker
+cp ${HOSTDIR}/${HOST}-server-cert.pem /etc/docker
+chmod -v 0444 /etc/docker/${HOST}-ca.pem
+chmod -v 0444 /etc/docker/${HOST}-server-cert.pem
+echo "===================================================="
+
+echo "12: Configure Docker: Keys"
+cp ${HOSTDIR}/${HOST}-server-key.pem /etc/docker
+chmod -v 0400 /etc/docker/${HOST}-server-key.pem
+echo "===================================================="
+
+echo "13: Configure service options"
+echo "DOCKER_OPTS=\"--tlsverify --tlscacert=/etc/docker/${HOST}-ca.pem --tlscert=/etc/docker/${HOST}-server-cert.pem --tlskey=/etc/docker/${HOST}-server-key.pem -H=0.0.0.0:2376\"" >> /etc/default/docker
+chmod -v 0400 /etc/default/docker
 echo "===================================================="
