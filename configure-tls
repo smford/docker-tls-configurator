@@ -29,6 +29,21 @@ echo -e "IP=${IP}"
 echo -e "SCRIPTDIR=${SCRIPTDIR}"
 echo -e "HOSTDIR=${HOSTDIR}"
 
+read -s -p "Certificate Authority Password: " CAPASSWORD1
+echo ""
+read -s -p "               Verify Password: " CAPASSWORD2
+
+echo -e "\ncap1=${CAPASSWORD1}"
+echo -e "cap2=${CAPASSWORD2}"
+
+if [ "${CAPASSWORD1}" != "${CAPASSWORD2}" ]; then
+  echo "Passwords do not match, exiting"
+  exit 1
+else
+  echo "Passwords match"
+fi
+
+
 # temporarily used to bypass generation of certs
 #if false; then
 
@@ -37,15 +52,15 @@ if [[ ! -d ${HOSTDIR} ]]; then
 fi
 
 echo "1: Generating CA Key"
-openssl genrsa -aes256 -out ${HOSTDIR}/${HOST}-ca-key.pem 4096
+openssl genrsa -aes256 -passout pass:${CAPASSWORD1} -out ${HOSTDIR}/${HOST}-ca-key.pem 4096
 echo "===================================================="
 
 echo "2: Generating CA Certificate"
-openssl req -new -x509 -days 365 -key ${HOSTDIR}/${HOST}-ca-key.pem -sha256 -out ${HOSTDIR}/${HOST}-ca.pem
+openssl req -new -passin pass:${CAPASSWORD1} -x509 -days 365 -key ${HOSTDIR}/${HOST}-ca-key.pem -sha256 -out ${HOSTDIR}/${HOST}-ca.pem
 echo "===================================================="
 
 echo "3: Generating Server Key"
-openssl genrsa -out ${HOSTDIR}/${HOST}-server-key.pem 4096
+openssl genrsa --passout pass:${CAPASSWORD1} -out ${HOSTDIR}/${HOST}-server-key.pem 4096
 echo "===================================================="
 
 echo "4: Generating Server CSR"
@@ -58,7 +73,7 @@ echo extendedKeyUsage = serverAuth >> ${HOSTDIR}/${HOST}-extfile.cnf
 echo "===================================================="
 
 echo "6: Generate Signed Certificate"
-openssl x509 -req -days 365 -sha256 -in ${HOSTDIR}/${HOST}-server.csr -CA ${HOSTDIR}/${HOST}-ca.pem -CAkey ${HOSTDIR}/${HOST}-ca-key.pem -CAcreateserial -out ${HOSTDIR}/${HOST}-server-cert.pem -extfile ${HOSTDIR}/${HOST}-extfile.cnf
+openssl x509 -passin pass:${CAPASSWORD1} -req -days 365 -sha256 -in ${HOSTDIR}/${HOST}-server.csr -CA ${HOSTDIR}/${HOST}-ca.pem -CAkey ${HOSTDIR}/${HOST}-ca-key.pem -CAcreateserial -out ${HOSTDIR}/${HOST}-server-cert.pem -extfile ${HOSTDIR}/${HOST}-extfile.cnf
 echo "===================================================="
 
 echo "7: Generate Client Key"
@@ -74,9 +89,10 @@ echo extendedKeyUsage = clientAuth > ${HOSTDIR}/${HOST}-client-extfile.cnf
 echo "===================================================="
 
 echo "10: Generate Client Signed Certificate"
-openssl x509 -req -days 365 -sha256 -in ${HOSTDIR}/${HOST}-client.csr -CA ${HOSTDIR}/${HOST}-ca.pem -CAkey ${HOSTDIR}/${HOST}-ca-key.pem -CAcreateserial -out ${HOSTDIR}/${HOST}-client-cert.pem -extfile ${HOSTDIR}/${HOST}-client-extfile.cnf
+openssl x509 -passin pass:${CAPASSWORD1} -req -days 365 -sha256 -in ${HOSTDIR}/${HOST}-client.csr -CA ${HOSTDIR}/${HOST}-ca.pem -CAkey ${HOSTDIR}/${HOST}-ca-key.pem -CAcreateserial -out ${HOSTDIR}/${HOST}-client-cert.pem -extfile ${HOSTDIR}/${HOST}-client-extfile.cnf
 echo "===================================================="
 
+exit
 # fi
 
 echo "11: Configure Docker: Certificates"
