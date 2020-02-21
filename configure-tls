@@ -2,10 +2,8 @@
 
 #set -xeuo pipefail
 
-HOST=g2
-IP=192.168.10.21
-
 if [[ $# < 2 ]]; then
+  echo ""
   echo "A simple tool to configure TLS certificates for docker"
 	echo ""
   echo -e "Usage:\n  configure-docker-tls <hostname> <ip>"
@@ -16,12 +14,22 @@ if [[ $# < 2 ]]; then
   exit 1
 fi
 
+HOST="${1}"
+IP="${2}"
+
 SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 HOSTDIR=${SCRIPTDIR}/${HOST}
 
+echo -e "Host=${HOST}"
+echo -e "IP=${IP}"
+echo -e "SCRIPTDIR=${SCRIPTDIR}"
+echo -e "HOSTDIR=${HOSTDIR}"
+
+exit
+
 # temporarily used to bypass generation of certs
-if false; then
+#if false; then
 
 if [[ -d ${HOSTDIR} ]]; then
   mkdir ${HOSTDIR}
@@ -68,7 +76,7 @@ echo "10: Generate Client Signed Certificate"
 openssl x509 -req -days 365 -sha256 -in ${HOSTDIR}/${HOST}-client.csr -CA ${HOSTDIR}/${HOST}-ca.pem -CAkey ${HOSTDIR}/${HOST}-ca-key.pem -CAcreateserial -out ${HOSTDIR}/${HOST}-client-cert.pem -extfile ${HOSTDIR}/${HOST}-client-extfile.cnf
 echo "===================================================="
 
-fi
+# fi
 
 echo "11: Configure Docker: Certificates"
 cp ${HOSTDIR}/${HOST}-ca.pem /etc/docker
