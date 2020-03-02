@@ -74,11 +74,12 @@ Usage:
 
 1. Enable TLS connection via default:
    ```
+   export HOST="[hostname]"
    mkdir ~/.docker
-   cp [hostname]/[hostname]-ca.pem ~/.docker/ca.pem
-   cp [hostname]/[hostname]-client-cert.pem ~/.docker/client.pem
-   cp [hostname]/[hostname]-client-key.pem ~/.docker/key.pem
-   export DOCKER_HOST=tcp://[hostname]:2376 DOCKER_TLS_VERIFY=1
+   cp $HOST/$HOST-ca.pem ~/.docker/ca.pem
+   cp $HOST/$HOST-client-cert.pem ~/.docker/client.pem
+   cp $HOST/$HOST-client-key.pem ~/.docker/key.pem
+   export DOCKER_HOST=tcp://$HOST:2376 DOCKER_TLS_VERIFY=1
    docker info
 	 ```
 1. Single connection
@@ -88,7 +89,7 @@ Usage:
    ```
 1. Multiple docker servers
    ```
-   export DHOST="g1"
+   export DHOST="[hostname]"
    export DOCKER_CERT_PATH=~/.docker/$DHOST/
    export DOCKER_HOST=tcp://$DHOST:2376 DOCKER_TLS_VERIFY=1
    ```
