@@ -58,11 +58,11 @@ Usage:
 
 | Setting | Default |
 |:--|:--|
-| Name | <hostname> |
-| Endpoint URL | <hostname>:2376 or <ip>:2376 |
+| Name | [hostname] |
+| Endpoint URL | [hostname]:2376 or [ip]:2376 |
 | Select | TLS with server and client verification |
-| TLS CA certificate | <hostname>-ca.pem |
-| TLS certificate | <hostname>-client-cert.pem |
-| TLS key | <hostname>--client-key.pem |
+| TLS CA certificate | [hostname]-ca.pem |
+| TLS certificate | [hostname]-client-cert.pem |
+| TLS key | [hostname]-client-key.pem |
 
 ### Via Command line
