@@ -1,2 +1,0 @@
-subjectAltName = DNS:g2,IP:192.168.10.21,IP:127.0.0.1
-extendedKeyUsage = serverAuth
