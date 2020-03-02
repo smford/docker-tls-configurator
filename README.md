@@ -66,3 +66,13 @@ Usage:
 | TLS key | [hostname]-client-key.pem |
 
 ### Via Command line
+
+1. Enable TLS connection via default:
+   ```
+	 mkdir ~/.docker
+	 cp [hostname]/[hostname]-ca.pem ~/.docker/ca.pem
+	 cp [hostname]/[hostname]-client-cert.pem ~/.docker/client.pem
+	 cp [hostname]/[hostname]-client-key.pem ~/.docker/key.pem
+	 export DOCKER_HOST=tcp://[hostname]:2376 DOCKER_TLS_VERIFY=1
+	 docker info
+	 ```
