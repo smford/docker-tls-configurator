@@ -12,7 +12,7 @@ Configures the right things to allow easy connection from [Portainer.io](https:/
 
 ## Instructions
 
-Run the docker-tls-configurator on the docker server you wish to install the TLS certs on.
+Run the docker-tls-configurator.sh on the docker server you wish to install the TLS certs on.
 
 It will configure the docker service by:
 1. Generate CA Key
@@ -29,6 +29,8 @@ It will configure the docker service by:
 1. Configure Docker: Keys
 1. Configure Docker Service: /etc/docker/daemon.json
 1. Configure Docker Service: /etc/systemd/system/docker.service.d/override.conf
+
+The certificates, keys, CSRs, certificate configuration files are then saved in to a directory names after the server hostname in the current directory.
 
 ## Requirements
 
@@ -53,5 +55,14 @@ Usage:
 ## Connecting to the Server
 
 ### Via Portainer
+
+| Setting | Default |
+|:--|:--|
+| Name | <hostname> |
+| Endpoint URL | <hostname>:2376 or <ip>:2376 |
+| Select | TLS with server and client verification |
+| TLS CA certificate | <hostname>-ca.pem |
+| TLS certificate | <hostname>-client-cert.pem |
+| TLS key | <hostname>--client-key.pem |
 
 ### Via Command line
