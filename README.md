@@ -76,3 +76,15 @@ Usage:
 	 export DOCKER_HOST=tcp://[hostname]:2376 DOCKER_TLS_VERIFY=1
 	 docker info
 	 ```
+1. Single connection
+   ```
+	 do something here
+	 ```
+1. Multiple docker servers
+   ```
+	 export DHOST="g1"
+   export DOCKER_CERT_PATH=~/.docker/$DHOST/
+   export DOCKER_HOST=tcp://$DHOST:2376 DOCKER_TLS_VERIFY=1
+   ```
+	 - have the each servers certificates saved in to ~/.docker/[hostname] diretories with ca.pem, client.pem and key.pem
+	 - and to change which server to connect to do `export DHOST="g1"` or `export DHOST="g2"`
