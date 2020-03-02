@@ -4,7 +4,7 @@ A simple script that generates and configures TLS for docker, allowing you quick
 
 Based upon this document: [Protect the Docker daemon socket](https://docs.docker.com/engine/security/https/)
 
-Configures the right things to allow easy connection from [Portainer.io](https://www.portainer.io/)
+Configures the right things to allow easy connection from the command line or [Portainer.io](https://www.portainer.io/)
 
 ## Tested on
 
