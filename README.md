@@ -8,7 +8,11 @@ Configures the right things to allow easy connection from [Portainer.io](https:/
 
 ## Tested on
 
- - Ubuntu 18.04.3 LTS bionic
+- OS
+  - Ubuntu 18.04.3 LTS bionic
+- Docker
+  - 19.03.5
+  - 19.03.6
 
 ## Instructions
 
@@ -88,5 +92,5 @@ Usage:
    export DOCKER_CERT_PATH=~/.docker/$DHOST/
    export DOCKER_HOST=tcp://$DHOST:2376 DOCKER_TLS_VERIFY=1
    ```
-	 - have the each servers certificates saved in to ~/.docker/[hostname] diretories with ca.pem, client.pem and key.pem
+	 - have the each servers certificates saved in to ~/.docker/[hostname] directories with ca.pem, client.pem and key.pem
 	 - and to change which server to connect to do `export DHOST="g1"` or `export DHOST="g2"`
