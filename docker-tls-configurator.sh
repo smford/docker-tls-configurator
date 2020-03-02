@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+VERSION="v1"
+
 # Tested on:
 # - Ubuntu 18.04.3 LTS bionic
 
@@ -9,7 +11,7 @@ if [[ $# < 2 ]]; then
   echo ""
   echo "A simple tool to configure TLS certificates for docker"
   echo ""
-  echo -e "Usage:\n  configure-docker-tls <hostname> <ip>"
+  echo -e "Usage:\n  docker-tls-configurator.sh <hostname> <ip>"
   echo ""
   echo " hostname = DNS hostname of server running the docker daemon"
   echo " ip       = IP address of server running the docker daemon"
@@ -81,7 +83,7 @@ echo "8: Generate Client CSR"
 openssl req -subj '/CN=client' -new -key ${HOSTDIR}/${HOST}-client-key.pem -out ${HOSTDIR}/${HOST}-client.csr
 echo "===================================================="
 
-echo "9: Configuring Client"
+echo "9: Configuring Client Certificate"
 echo extendedKeyUsage = clientAuth > ${HOSTDIR}/${HOST}-client-extfile.cnf
 echo "===================================================="
 
