@@ -50,23 +50,23 @@ if [[ ! -d ${HOSTDIR} ]]; then
   mkdir ${HOSTDIR}
 fi
 
-echo "1: Generating CA Key"
+echo "1: Generate CA Key"
 openssl genrsa -aes256 -passout pass:${CAPASSWORD1} -out ${HOSTDIR}/${HOST}-ca-key.pem 4096
 echo "===================================================="
 
-echo "2: Generating CA Certificate"
+echo "2: Generate CA Certificate"
 openssl req -new -passin pass:${CAPASSWORD1} -x509 -days 365 -key ${HOSTDIR}/${HOST}-ca-key.pem -sha256 -out ${HOSTDIR}/${HOST}-ca.pem
 echo "===================================================="
 
-echo "3: Generating Server Key"
+echo "3: Generate Server Key"
 openssl genrsa --passout pass:${CAPASSWORD1} -out ${HOSTDIR}/${HOST}-server-key.pem 4096
 echo "===================================================="
 
-echo "4: Generating Server CSR"
+echo "4: Generate Server CSR"
 openssl req -subj "/CN=$HOST" -sha256 -new -key ${HOSTDIR}/${HOST}-server-key.pem -out ${HOSTDIR}/${HOST}-server.csr
 echo "===================================================="
 
-echo "5: Configuring Server CSR"
+echo "5: Configure Server CSR"
 echo subjectAltName = DNS:${HOST},IP:${IP},IP:127.0.0.1 >> ${HOSTDIR}/${HOST}-extfile.cnf
 echo extendedKeyUsage = serverAuth >> ${HOSTDIR}/${HOST}-extfile.cnf
 echo "===================================================="
@@ -83,7 +83,7 @@ echo "8: Generate Client CSR"
 openssl req -subj '/CN=client' -new -key ${HOSTDIR}/${HOST}-client-key.pem -out ${HOSTDIR}/${HOST}-client.csr
 echo "===================================================="
 
-echo "9: Configuring Client Certificate"
+echo "9: Configure Client Certificate"
 echo extendedKeyUsage = clientAuth > ${HOSTDIR}/${HOST}-client-extfile.cnf
 echo "===================================================="
 
