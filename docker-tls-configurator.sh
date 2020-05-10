@@ -134,7 +134,7 @@ chmod -v 0644 /etc/systemd/system/docker.service.d/override.conf
 systemctl daemon-reload
 echo "===================================================="
 
-eeho "Completed Installation."
+echo "Completed Installation."
 echo -e "- created certificate authority key and certificate, ${HOST}-ca-key.pem, ${HOST}-ca.pem"
 echo -e "- created docker server key and certificate, ${HOST}-server-key.pem, ${HOST}-server-cert.pem"
 echo -e "- created client key and certificate, and signed with server certificate, ${HOST}-client-key.pem, ${HOST}-client-key.pem"
